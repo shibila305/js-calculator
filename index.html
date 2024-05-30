@@ -40,7 +40,7 @@
         }
 
         function appendNumber(number) {
-            if (currentNumber.includes('.') && number === '.') return;
+           
             currentNumber += number;
             expression = currentNumber;
             updateDisplay();
@@ -62,7 +62,7 @@
             let result;
             const prev = parseFloat(previousNumber);
             const current = parseFloat(currentNumber);
-            if (isNaN(prev) || isNaN(current)) return;
+           
             switch (operator) {
                 case '+':
                     result = prev + current;
