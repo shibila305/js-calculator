@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <!--main section-->
+    <div class="main">
+        <div class="item inpt" id="input">0</div>
+        <button class="item item1 operator" data-value="+">+</button>
+        <button class="item item2 operator" data-value="-">-</button>
+        <button class="item item3 operator" data-value="*">x</button>
+        <button class="item item4 operator" data-value="/">/</button>
+        <button class="item item5" data-value="7">7</button>
+        <button class="item item6" data-value="8">8</button>
+        <button class="item item7" data-value="9">9</button>
+        <button class="item item8" id="equals">=</button>
+        <button class="item item9" data-value="4">4</button>
+        <button class="item item10" data-value="5">5</button>
+        <button class="item item11" data-value="6">6</button>
+        <button class="item item12" data-value="1">1</button>
+        <button class="item item13" data-value="2">2</button>
+        <button class="item item14" data-value="3">3</button>
+        <button class="item item15" data-value="0">0</button>
+        <button class="item item16" data-value=".">.</button>
+        <button class="item item17" id="reset">C</button>
+    </div>
+ 
+    <script>
+        let expression = '';
+        let currentNumber = '';
+        let previousNumber = '';
+        let operator = null;
+
+        function updateDisplay() {
+            document.getElementById('input').innerText = expression || '0';
+        }
+
+        function appendNumber(number) {
+            if (currentNumber.includes('.') && number === '.') return;
+            currentNumber += number;
+            expression = currentNumber;
+            updateDisplay();
+        }
+
+        function chooseOperator(newOperator) {
+            if (currentNumber === '') return;
+            if (previousNumber !== '') {
+                calculate();
+            }
+            operator = newOperator;
+            previousNumber = currentNumber;
+            currentNumber = '';
+            expression += ` ${operator} `;
+            updateDisplay();
+        }
+
+        function calculate() {
+            let result;
+            const prev = parseFloat(previousNumber);
+            const current = parseFloat(currentNumber);
+            if (isNaN(prev) || isNaN(current)) return;
+            switch (operator) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '*':
+                    result = prev * current;
+                    break;
+                case '/':
+                    result = prev / current;
+                    break;
+                default:
+                    return;
+            }
+            currentNumber = result.toString();
+            operator = null;
+            previousNumber = '';
+            expression = currentNumber;
+            updateDisplay();
+        }
+
+        function clearInput() {
+            currentNumber = '';
+            previousNumber = '';
+            operator = null;
+            expression = '0';
+            updateDisplay();
+        }
+
+        document.querySelectorAll('.main button[data-value]').forEach(button => {
+            button.addEventListener('click', () => {
+                const value = button.getAttribute('data-value');
+                if (!isNaN(value) || value === '.') {
+                    appendNumber(value);
+                } else {
+                    chooseOperator(value);
+                }
+            });
+        });
+
+        document.getElementById('equals').addEventListener('click', () => {
+            if (operator !== null && currentNumber !== '') {
+                calculate();
+            }
+        });
+
+        document.getElementById('reset').addEventListener('click', clearInput);
+
+    </script>
+</body>
+</html>
